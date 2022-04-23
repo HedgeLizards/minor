@@ -4,7 +4,7 @@
 [ext_resource path="res://scenes/Environment.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/COMP_Wheels/COMP_Wheels_1.png" type="Texture" id=3]
 [ext_resource path="res://assets/TEX_Background_Light.png" type="Texture" id=4]
-[ext_resource path="res://assets/COMP_Engine/COMP_Engine_1.png" type="Texture" id=5]
+[ext_resource path="res://assets/COMP_Engine/COMP_Engine_8.png" type="Texture" id=5]
 [ext_resource path="res://assets/COMP_Drill/COMP_Drill_1.png" type="Texture" id=6]
 
 [node name="Main" type="Node"]
@@ -35,7 +35,7 @@ texture_normal = ExtResource( 6 )
 [node name="Wheel" type="TextureButton" parent="CanvasLayer/Components"]
 margin_top = 96.0
 margin_right = 32.0
-margin_bottom = 112.0
+margin_bottom = 128.0
 texture_normal = ExtResource( 3 )
 
 [node name="TextureRect" type="TextureRect" parent="."]
