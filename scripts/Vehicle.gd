@@ -22,13 +22,11 @@ func _ready():
 	$Core.x = 1
 	$Core.y = 1
 	
-	add_component(DrillScene, 0, -1)
-	add_component(WheelScene, -1, 0)
-	add_component(WheelScene, 1, 0)
+	add_component(DrillScene.instance(), 0, -1)
+	add_component(WheelScene.instance(), -1, 0)
+	add_component(WheelScene.instance(), 1, 0)
 
-func add_component(scene, x, y):
-	var component = scene.instance()
-
+func add_component(component, x, y):
 	component.position = Vector2(x, y) * COMPONENT_SIZE
 	component.x = x + coreX
 	component.y = y + coreY
@@ -39,6 +37,23 @@ func add_component(scene, x, y):
 		shapes.push_back(component)
 	
 	add_child(component)
+
+func add_placeholder(scene, template):
+	placing = scene.instance()
+	
+	$Sprite.visible = true
+	$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
+	$Sprite.texture = template.texture_normal
+	$Sprite.modulate = template.modulate # temporary
+
+func _on_Engine_button_down():
+	add_placeholder(EngineScene, $'../CanvasLayer/Components/Engine')
+
+func _on_Drill_button_down():
+	add_placeholder(DrillScene, $'../CanvasLayer/Components/Drill')
+
+func _on_Wheel_button_down():
+	add_placeholder(WheelScene, $'../CanvasLayer/Components/Wheel')
 
 func _on_Vehicle_input_event(viewport, event, shape_idx, component = null):
 	if placing == null and event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
@@ -54,13 +69,13 @@ func _on_Vehicle_input_event(viewport, event, shape_idx, component = null):
 		placing.visible = false
 		
 		$Sprite.visible = true
-		$Sprite.transform = placing.transform
+		$Sprite.position = placing.position
 		$Sprite.texture = placing.get_node('Sprite').texture
 		$Sprite.modulate = placing.get_node('Sprite').modulate # temporary
 		
 		update()
 
-func _unhandled_input(event):
+func _input(event):
 	if placing == null:
 		return
 	
@@ -70,7 +85,9 @@ func _unhandled_input(event):
 		var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + Vector2(coreX, coreY)
 		
 		if cell.x >= 0 and cell.y >= 0 and cell.x < gridW and cell.y < gridH and grid[cell.x][cell.y] == null:
-			grid[placing.x][placing.y] = null
+			if placing.is_inside_tree():
+				grid[placing.x][placing.y] = null
+			
 			grid[cell.x][cell.y] = placing
 			
 			var xOld = placing.x
@@ -80,22 +97,30 @@ func _unhandled_input(event):
 			placing.y = cell.y
 			
 			if [
-				(xOld == 0 or grid[xOld - 1][yOld] == null or grid[xOld - 1][yOld].is_valid(grid, gridW, gridH)),
-				(yOld == 0 or grid[xOld][yOld - 1] == null or grid[xOld][yOld - 1].is_valid(grid, gridW, gridH)),
-				(xOld == gridW - 1 or grid[xOld + 1][yOld] == null or grid[xOld + 1][yOld].is_valid(grid, gridW, gridH)),
-				(yOld == gridH - 1 or grid[xOld][yOld + 1] == null or grid[xOld][yOld + 1].is_valid(grid, gridW, gridH)),
+				(xOld == null or xOld == 0 or grid[xOld - 1][yOld] == null or grid[xOld - 1][yOld].is_valid(grid, gridW, gridH)),
+				(yOld == null or yOld == 0 or grid[xOld][yOld - 1] == null or grid[xOld][yOld - 1].is_valid(grid, gridW, gridH)),
+				(xOld == null or xOld == gridW - 1 or grid[xOld + 1][yOld] == null or grid[xOld + 1][yOld].is_valid(grid, gridW, gridH)),
+				(yOld == null or yOld == gridH - 1 or grid[xOld][yOld + 1] == null or grid[xOld][yOld + 1].is_valid(grid, gridW, gridH)),
 				placing.is_valid(grid, gridW, gridH)
 			].has(false):
-				grid[placing.x][placing.y] = null
-				grid[xOld][yOld] = placing
+				grid[cell.x][cell.y] = null
 				
-				placing.x = xOld
-				placing.y = yOld
-				placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
-			else:
+				if placing.is_inside_tree():
+					grid[xOld][yOld] = placing
+					
+					placing.x = xOld
+					placing.y = yOld
+					placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
+				else:
+					placing.queue_free()
+			elif placing.is_inside_tree():
 				placing.position = (cell - Vector2(coreX, coreY)) * COMPONENT_SIZE
-		else:
+			else:
+				add_component(placing, cell.x - coreX, cell.y - coreY)
+		elif placing.is_inside_tree():
 			placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
+		else:
+			placing.queue_free()
 		
 		$Sprite.visible = false
 		
