@@ -29,7 +29,6 @@ script = ExtResource( 2 )
 [node name="Sprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 3 )
-frame = 4
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -41,6 +40,8 @@ shape = SubResource( 1 )
 position = Vector2( 0, -24 )
 
 [node name="Weapon" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Weapon"]
 shape = SubResource( 2 )
