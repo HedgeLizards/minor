@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 
 var speed = 200
+var health = 1.0
 
 
 func _physics_process(delta):
