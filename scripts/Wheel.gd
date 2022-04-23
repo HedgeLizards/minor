@@ -2,7 +2,7 @@ extends CollisionShape2D
 
 var x
 var y
-var solid = true
+var solid = false
 var power = false
 
 func is_valid(grid, gridW, gridH):

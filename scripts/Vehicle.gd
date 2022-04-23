@@ -41,10 +41,9 @@ func add_component(component, x, y):
 func add_placeholder(scene, template):
 	placing = scene.instance()
 	
-	$Sprite.visible = true
-	$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
 	$Sprite.texture = template.texture_normal
-	$Sprite.modulate = template.modulate # temporary
+	$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
+	$Sprite.visible = true
 
 func _on_Engine_button_down():
 	add_placeholder(EngineScene, $'../CanvasLayer/Components/Engine')
@@ -64,14 +63,13 @@ func _on_Vehicle_input_event(viewport, event, shape_idx, component = null):
 		else:
 			return
 		
-		grid[placing.x][placing.y] = null
+		$Sprite.texture = placing.get_node('Sprite').frames.get_frame('default', 0)
+		$Sprite.position = placing.position
+		$Sprite.visible = true
 		
 		placing.visible = false
 		
-		$Sprite.visible = true
-		$Sprite.position = placing.position
-		$Sprite.texture = placing.get_node('Sprite').texture
-		$Sprite.modulate = placing.get_node('Sprite').modulate # temporary
+		grid[placing.x][placing.y] = null
 		
 		update()
 
