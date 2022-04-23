@@ -26,3 +26,10 @@ func is_valid(grid, gridW, gridH):
 
 func _ready():
 	connect('input_event', get_parent(), '_on_Vehicle_input_event', [self])
+
+
+
+func _physics_process(delta):
+	var enemies = $Weapon.get_overlapping_bodies()
+	for enemy in enemies:
+		enemy.do_damage(damage * delta)
