@@ -21,4 +21,4 @@ texture = ExtResource( 1 )
 [node name="drillbit1" type="Node2D" parent="." groups=["drillbits"]]
 
 [node name="drillbit2" type="Node2D" parent="." groups=["drillbits"]]
-position = Vector2( 0, -16 )
+position = Vector2( 0, -24 )

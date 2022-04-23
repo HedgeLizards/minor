@@ -1,5 +1,7 @@
 extends Area2D
 
+export var damage = 1.0
+
 var x
 var y
 var solid = false
