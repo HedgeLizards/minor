@@ -9,8 +9,6 @@ extents = Vector2( 32, 32 )
 [node name="Drill" type="Area2D"]
 monitoring = false
 monitorable = false
-collision_layer = 0
-collision_mask = 2
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

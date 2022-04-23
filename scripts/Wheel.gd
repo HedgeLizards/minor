@@ -1,8 +1,8 @@
-extends Area2D
+extends CollisionShape2D
 
 var x
 var y
-var solid = false
+var solid = true
 var power = false
 
 func is_valid(grid, gridW, gridH):
@@ -21,6 +21,3 @@ func is_valid(grid, gridW, gridH):
 		(x < gridW - 1 and y > 0 and grid[x + 1][y - 1] != null and grid[x + 1][y - 1].power),
 		(x < gridW - 1 and y < gridH - 1 and grid[x + 1][y + 1] != null and grid[x + 1][y + 1].power)
 	].has(true)
-
-func _ready():
-	connect('input_event', get_parent(), '_on_Vehicle_input_event', [self])
