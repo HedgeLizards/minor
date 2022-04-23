@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Tileset_Stones.png-bac0a3b141d059f3bbc26cba8336b081.stex"
+path="res://.import/COMP_Storage.png-e01fa81221d2c89819258e7e7d66741a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Tileset_Stones.png"
-dest_files=[ "res://.import/Tileset_Stones.png-bac0a3b141d059f3bbc26cba8336b081.stex" ]
+source_file="res://assets/COMP_Storage.png"
+dest_files=[ "res://.import/COMP_Storage.png-e01fa81221d2c89819258e7e7d66741a.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

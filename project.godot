@@ -28,6 +28,12 @@ window/energy_saving/keep_screen_on=false
 
 snap=false
 
+[importer_defaults]
+
+texture={
+"flags/filter": false
+}
+
 [input]
 
 forward={

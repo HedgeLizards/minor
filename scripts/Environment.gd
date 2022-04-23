@@ -6,8 +6,8 @@ extends Node2D
 # var b = "text"
 
 const EMPTY_TILE = -1
-const GROUND_TILE = 1
-const GOLD_TILE = 2
+const GROUND_TILE = 0
+const IRON_TILE = 1
 
 var grid = {}
 
@@ -25,7 +25,7 @@ class TileType:
 
 var EMPTY = TileType.new(EMPTY_TILE, 0.0, false, false)
 var GROUND = TileType.new(GROUND_TILE, 1.0)
-var GOLD = TileType.new(GOLD_TILE, 2.0)
+var IRON = TileType.new(IRON_TILE, 2.0)
 
 class Tile:
 	var typ
@@ -42,14 +42,11 @@ func repeat(val, n):
 		arr.append(val)
 	return arr
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	#grid[Vector2(321, 567)] = "abc"
-	#print(grid[Vector2(321, 567)])
 
 	$Tiles.clear()
 	$Occlusion.clear()
-	var filling = repeat(EMPTY, 5) + repeat(GROUND, 50) + repeat(GOLD, 1)
+	var filling = repeat(EMPTY, 5) + repeat(GROUND, 50) + repeat(IRON, 1)
 
 	for x in range(-100, 100):
 		for y in range(-100, 100):
