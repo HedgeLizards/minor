@@ -1,4 +1,4 @@
-extends Node2D
+extends CollisionShape2D
 
 var components = [
 	[null, null, null],
