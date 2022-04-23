@@ -4,6 +4,9 @@
 [ext_resource path="res://scripts/Vehicle.gd" type="Script" id=2]
 
 [node name="Vehicle" type="KinematicBody2D"]
+input_pickable = true
 script = ExtResource( 2 )
 
 [node name="Core" parent="." instance=ExtResource( 1 )]
+
+[connection signal="input_event" from="." to="." method="_on_Vehicle_input_event"]
