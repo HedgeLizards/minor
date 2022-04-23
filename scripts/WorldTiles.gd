@@ -30,7 +30,7 @@ func _ready():
 
 
 func _process(delta):
-	var drills = get_tree().get_nodes_in_group("drills")
+	var drills = get_tree().get_nodes_in_group("drillbits")
 	for drill in drills:
 		var local_position = self.to_local(drill.global_position)
 		var map_position = self.world_to_map(local_position)
