@@ -16,14 +16,16 @@ class TileType:
 	var tileid
 	var occluding
 	var maxhealth
-	func _init(tileid, occluding, maxhealth = 1.0):
+	var destructible
+	func _init(tileid, maxhealth = 1.0, occluding = true, destructible = true):
 		self.tileid = tileid
 		self.occluding = occluding
 		self.maxhealth = maxhealth
+		self.destructible = destructible
 
-var EMPTY = TileType.new(EMPTY_TILE, false)
-var GROUND = TileType.new(GROUND_TILE, true)
-var GOLD = TileType.new(GOLD_TILE, true)
+var EMPTY = TileType.new(EMPTY_TILE, 0.0, false, false)
+var GROUND = TileType.new(GROUND_TILE, 1.0)
+var GOLD = TileType.new(GOLD_TILE, 2.0)
 
 class Tile:
 	var typ
@@ -90,6 +92,11 @@ func _process(delta):
 	for drill in drills:
 		var local_position = $Tiles.to_local(drill.global_position)
 		var map_position = $Tiles.world_to_map(local_position)
-		update_tile(map_position, Tile.new(EMPTY, true))
+		var tile = grid.get(map_position)
+		if tile.typ.destructible:
+			var damage = drill.get_parent().damage * delta
+			tile.health -= damage
+			if tile.health <= 0.0:
+				update_tile(map_position, Tile.new(EMPTY, true))
 
 
