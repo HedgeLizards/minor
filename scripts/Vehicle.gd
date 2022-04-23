@@ -16,6 +16,8 @@ onready var EngineScene = preload('res://scenes/Engine.tscn')
 onready var DrillScene = preload('res://scenes/Drill.tscn')
 onready var WheelScene = preload('res://scenes/Wheel.tscn')
 
+onready var viewport = get_viewport()
+
 func _ready():
 	$Core.x = 1
 	$Core.y = 1
@@ -49,29 +51,33 @@ func _on_Vehicle_input_event(viewport, event, shape_idx, component = null):
 		
 		grid[placing.x][placing.y] = null
 		
-		placing.z_index = 1
+		placing.visible = false
 		
-		update()	
+		$Sprite.visible = true
+		$Sprite.transform = placing.transform
+		$Sprite.texture = placing.get_node('Sprite').texture
+		$Sprite.modulate = placing.get_node('Sprite').modulate # temporary
+		
+		update()
 
 func _unhandled_input(event):
 	if placing == null:
 		return
 	
 	if event is InputEventMouseMotion:
-		placing.position += event.relative.rotated(-rotation)
-	
-	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
-		var index = Vector2(coreX, coreY) + (to_local(event.position - get_viewport().canvas_transform.origin) / COMPONENT_SIZE).round()
+		$Sprite.position = to_local(event.position - viewport.canvas_transform.origin)
+	elif event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
+		var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + Vector2(coreX, coreY)
 		
-		if index.x >= 0 and index.y >= 0 and index.x < gridW and index.y < gridH and grid[index.x][index.y] == null:
+		if cell.x >= 0 and cell.y >= 0 and cell.x < gridW and cell.y < gridH and grid[cell.x][cell.y] == null:
 			grid[placing.x][placing.y] = null
-			grid[index.x][index.y] = placing
+			grid[cell.x][cell.y] = placing
 			
 			var xOld = placing.x
 			var yOld = placing.y
 			
-			placing.x = index.x
-			placing.y = index.y
+			placing.x = cell.x
+			placing.y = cell.y
 			
 			if [
 				(xOld == 0 or grid[xOld - 1][yOld] == null or grid[xOld - 1][yOld].is_valid(grid, gridW, gridH)),
@@ -87,11 +93,13 @@ func _unhandled_input(event):
 				placing.y = yOld
 				placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
 			else:
-				placing.position = (index - Vector2(coreX, coreY)) * COMPONENT_SIZE
+				placing.position = (cell - Vector2(coreX, coreY)) * COMPONENT_SIZE
 		else:
 			placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
 		
-		placing.z_index = 0
+		$Sprite.visible = false
+		
+		placing.visible = true
 		placing = null
 		
 		update()
@@ -119,5 +127,8 @@ func _physics_process(delta):
 	
 	if Input.is_action_pressed('turnright'):
 		rotation_degrees += 2
+	
+	if placing != null and (Input.is_action_pressed('turnleft') or Input.is_action_pressed('turnright')):
+		$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
 	
 	move_and_slide(velocity.rotated(rotation))
