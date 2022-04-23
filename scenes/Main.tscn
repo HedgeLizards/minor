@@ -2,9 +2,19 @@
 
 [ext_resource path="res://scenes/Vehicle.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Environment.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/Monster.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/TEX_Background_Light.png" type="Texture" id=4]
 
 [node name="Main" type="Node"]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_left = -10000.0
+margin_top = -10000.0
+margin_right = 10000.0
+margin_bottom = 10000.0
+rect_scale = Vector2( 8, 8 )
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 2
 
 [node name="Environment" parent="." instance=ExtResource( 2 )]
 
@@ -12,6 +22,3 @@
 
 [node name="Camera2D" type="Camera2D" parent="Vehicle"]
 current = true
-
-[node name="Monster" parent="." instance=ExtResource( 3 )]
-position = Vector2( -358, 9 )

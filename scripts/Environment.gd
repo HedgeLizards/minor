@@ -1,9 +1,7 @@
 extends Node2D
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+const Monster = preload("res://scenes/Monster.tscn")
 
 const EMPTY_TILE = -1
 const GROUND_TILE = 0
@@ -24,6 +22,7 @@ class TileType:
 		self.destructible = destructible
 
 var EMPTY = TileType.new(EMPTY_TILE, 0.0, false, false)
+var MONSTER = TileType.new(EMPTY_TILE, 0.0, false, false)
 var GROUND = TileType.new(GROUND_TILE, 1.0)
 var IRON = TileType.new(IRON_TILE, 2.0)
 
@@ -43,10 +42,11 @@ func repeat(val, n):
 	return arr
 
 func _ready():
+	randomize()
 
 	$Tiles.clear()
 	$Occlusion.clear()
-	var filling = repeat(EMPTY, 5) + repeat(GROUND, 50) + repeat(IRON, 1)
+	var filling = repeat(EMPTY, 5) + repeat(GROUND, 50) + repeat(IRON, 1) + repeat(MONSTER, 4)
 
 	for x in range(-100, 100):
 		for y in range(-100, 100):
@@ -78,11 +78,18 @@ func update_visibility(pos, force=false):
 	tile.visible = true
 	$Occlusion.set_cellv(pos, 0)
 	if not tile.typ.occluding and (not was_visible or force):
+		if tile.typ == MONSTER:
+			spawn_monster(pos)
 		update_visibility(Vector2(pos.x + 1, pos.y))
 		update_visibility(Vector2(pos.x - 1, pos.y))
 		update_visibility(Vector2(pos.x, pos.y + 1))
 		update_visibility(Vector2(pos.x, pos.y - 1))
 
+func spawn_monster(map_pos):
+	var pos = $Tiles.to_global($Tiles.map_to_world(map_pos))
+	var monster = Monster.instance()
+	monster.global_position = pos
+	add_child(monster)
 
 func _process(delta):
 	var drills = get_tree().get_nodes_in_group("drillbits")
