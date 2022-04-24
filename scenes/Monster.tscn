@@ -8,8 +8,6 @@ extents = Vector2( 30, 30 )
 
 [node name="Monster" type="RigidBody2D"]
 collision_layer = 5
-linear_damp = 10.0
-angular_damp = 10.0
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
