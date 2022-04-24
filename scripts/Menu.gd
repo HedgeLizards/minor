@@ -3,9 +3,7 @@ extends CanvasLayer
 var inventory = {}
 
 func _ready():
-	# temporary
-	$Crafting.modulate.a = 1
-	add({ iron = 100, aluminium = 100 })
+	add({ iron = 100, aluminium = 100 }) # temporary
 	
 	for component in ['Engine', 'Drill', 'Wheel']:
 		var icon = $Crafting.get_node(component).get_node('Icon')
@@ -51,6 +49,7 @@ func add(items):
 			texture_rect.texture = preload('res://icon.png') # change to include item
 			
 			h_box_container.name = item
+			h_box_container.alignment = BoxContainer.ALIGN_END
 			h_box_container.set('custom_constants/separation', 16)
 			h_box_container.add_child(label, true)
 			h_box_container.add_child(texture_rect)
@@ -65,7 +64,7 @@ func add(items):
 			
 			$Inventory.get_node(item).get_node('Label').text = str(inventory[item])
 	
-	tween(false, 1)
+	tween(true, 1) # change back to false
 
 func remove(items):
 	for item in items:
