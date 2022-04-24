@@ -2,7 +2,7 @@ extends CollisionShape2D
 
 var x
 var y
-var solid = false
+var solid = true
 var power = false
 var type = 'Wheel'
 

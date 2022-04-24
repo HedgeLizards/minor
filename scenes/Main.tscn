@@ -16,6 +16,7 @@
 script = ExtResource( 8 )
 
 [node name="Crafting" type="VBoxContainer" parent="Menu"]
+visible = false
 modulate = Color( 1, 1, 1, 0 )
 anchor_top = 0.5
 anchor_bottom = 0.5
@@ -137,6 +138,7 @@ margin_bottom = 64.0
 texture = ExtResource( 7 )
 
 [node name="Inventory" type="VBoxContainer" parent="Menu"]
+visible = false
 modulate = Color( 1, 1, 1, 0 )
 anchor_left = 1.0
 anchor_top = 0.5
@@ -151,6 +153,10 @@ grow_vertical = 2
 custom_constants/separation = 32
 
 [node name="Tween" type="Tween" parent="Menu"]
+
+[node name="Timer" type="Timer" parent="Menu"]
+wait_time = 10.0
+one_shot = true
 
 [node name="TextureRect" type="TextureRect" parent="."]
 margin_left = -10000.0
@@ -173,3 +179,6 @@ current = true
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
 autoplay = true
+
+[connection signal="tween_completed" from="Menu/Tween" to="Menu" method="_on_Tween_tween_completed"]
+[connection signal="timeout" from="Menu/Timer" to="Menu" method="_on_Timer_timeout"]

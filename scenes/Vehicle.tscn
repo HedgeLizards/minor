@@ -4,7 +4,6 @@
 [ext_resource path="res://scripts/Vehicle.gd" type="Script" id=2]
 
 [node name="Vehicle" type="RigidBody2D"]
-input_pickable = true
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -13,5 +12,3 @@ scale = Vector2( 2, 2 )
 z_index = 1
 
 [node name="Core" parent="." instance=ExtResource( 1 )]
-
-[connection signal="input_event" from="." to="." method="_on_Vehicle_input_event"]
