@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends RigidBody2D
 
 const COMPONENT_SIZE = Vector2(64, 64)
 const COLOR_EMPTY = Color(0, 0.5, 1, 0.5)
@@ -137,6 +137,10 @@ func _draw():
 				), COLOR_EMPTY)
 
 func _physics_process(delta):
+	if placing != null and (Input.is_action_pressed('turnleft') or Input.is_action_pressed('turnright')):
+		$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
+
+func _integrate_forces(state):
 	var velocity = Vector2()
 	
 	if Input.is_action_pressed('forward'):
@@ -145,13 +149,7 @@ func _physics_process(delta):
 	if Input.is_action_pressed('backward'):
 		velocity.y += 200
 	
-	if Input.is_action_pressed('turnleft'):
-		rotation_degrees -= 2
+	state.angular_velocity = (float(Input.is_action_pressed('turnright')) - float(Input.is_action_pressed('turnleft'))) * 2
 	
-	if Input.is_action_pressed('turnright'):
-		rotation_degrees += 2
-	
-	if placing != null and (Input.is_action_pressed('turnleft') or Input.is_action_pressed('turnright')):
-		$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
-	
-	move_and_slide(velocity.rotated(rotation))
+	state.linear_velocity = velocity.rotated(rotation)
+
