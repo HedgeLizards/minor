@@ -6,15 +6,14 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 30, 30 )
 
-[node name="Monster" type="KinematicBody2D"]
-scale = Vector2( 2, 2 )
+[node name="Monster" type="RigidBody2D"]
 collision_layer = 5
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 33, 33 )
+scale = Vector2( 2, 2 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 32, 32 )
+scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )

@@ -127,23 +127,45 @@ func update_tile(pos, tile, view = false):
 	else:
 		$Occlusion.set_cellv(pos, 1)
 
+
 func update_visibility(pos, force=false):
+	var frontier = {} # actually a set
+	update_visibility_(pos, frontier, force)
+	for pos in frontier:
+		var tile = grid.get(pos)
+		if tile and not tile.visible:
+			var tl = check_visibility(pos, Vector2(-1, -1))
+			var bl = check_visibility(pos, Vector2(-1, 1))
+			var tr = check_visibility(pos, Vector2(1, -1))
+			var br = check_visibility(pos, Vector2(1, 1))
+			var index = Vector2(tl + 2 * tr, bl + 2 * br)
+			$Occlusion.set_cellv(pos, 2, false, false, false, index)
+
+func check_visibility(pos, offset):
+	for o in [offset, Vector2(offset.x, 0), Vector2(0, offset.y)]:
+		if grid.get(pos + o, EMPTY).visible:
+			return 0
+	return 1
+
+
+func update_visibility_(pos, frontier, force=false):
 	var tile = grid.get(pos)
-	if tile == null:
+	if tile == null or (tile.visible and not force) or tile.typ.occluding:
 		return
-	var was_visible = tile.visible
 	tile.visible = true
 	$Occlusion.set_cellv(pos, 0)
-	if not tile.typ.occluding and (not was_visible or force):
-		if tile.typ == MONSTER:
-			spawn_monster(pos)
-		update_visibility(Vector2(pos.x + 1, pos.y))
-		update_visibility(Vector2(pos.x - 1, pos.y))
-		update_visibility(Vector2(pos.x, pos.y + 1))
-		update_visibility(Vector2(pos.x, pos.y - 1))
+	if tile.typ == MONSTER:
+		spawn_monster(pos)
+	update_visibility_(Vector2(pos.x + 1, pos.y), frontier)
+	update_visibility_(Vector2(pos.x - 1, pos.y), frontier)
+	update_visibility_(Vector2(pos.x, pos.y + 1), frontier)
+	update_visibility_(Vector2(pos.x, pos.y - 1), frontier)
+	for x in range(-1, 2):
+		for y in range(-1, 2):
+			frontier[Vector2(x, y) + pos] = null
 
 func spawn_monster(map_pos):
-	var pos = $Tiles.to_global($Tiles.map_to_world(map_pos))
+	var pos = $Tiles.to_global($Tiles.map_to_world(map_pos + Vector2(0.5, 0.5)))
 	var monster = Monster.instance()
 	monster.global_position = pos
 	add_child(monster)
