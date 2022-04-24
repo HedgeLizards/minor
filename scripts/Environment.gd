@@ -165,7 +165,7 @@ func update_visibility_(pos, frontier, force=false):
 			frontier[Vector2(x, y) + pos] = null
 
 func spawn_monster(map_pos):
-	var pos = $Tiles.to_global($Tiles.map_to_world(map_pos))
+	var pos = $Tiles.to_global($Tiles.map_to_world(map_pos + Vector2(0.5, 0.5)))
 	var monster = Monster.instance()
 	monster.global_position = pos
 	add_child(monster)

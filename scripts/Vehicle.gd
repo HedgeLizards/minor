@@ -123,15 +123,8 @@ func _physics_process(delta):
 	if placing != null and (Input.is_action_pressed('turnleft') or Input.is_action_pressed('turnright')):
 		$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
 
-func _integrate_forces(state):
-	var velocity = Vector2()
-	
-	if Input.is_action_pressed('forward'):
-		velocity.y -= 200
-	
-	if Input.is_action_pressed('backward'):
-		velocity.y += 200
-	
-	state.angular_velocity = (float(Input.is_action_pressed('turnright')) - float(Input.is_action_pressed('turnleft'))) * 2
-	
-	state.linear_velocity = velocity.rotated(rotation)
+	var vel = -(float(Input.is_action_pressed('forward')) - float(Input.is_action_pressed('backward'))) * 2_000_000
+	var rot = (float(Input.is_action_pressed('turnright')) - float(Input.is_action_pressed('turnleft'))) * 30_000_000
+	applied_torque = rot
+	applied_force = Vector2(0, vel).rotated(rotation)
+

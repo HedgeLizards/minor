@@ -1,7 +1,7 @@
-extends KinematicBody2D
+extends RigidBody2D
 
 
-var speed = 200
+var speed = 2000
 var health = 2.0
 
 
@@ -12,7 +12,7 @@ func _physics_process(delta):
 		return
 	var direction = vehicle.position - position
 	var vel = direction.normalized() * speed
-	move_and_slide(vel)
+	applied_force = vel
 
 func do_damage(damage):
 	self.health -= damage
