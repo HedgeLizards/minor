@@ -7,7 +7,10 @@ var health = 2.0
 
 func _physics_process(delta):
 
-	var direction = get_node("/root/Main/Vehicle").position - position
+	var vehicle = get_node("/root/Main/Vehicle")
+	if vehicle == null:
+		return
+	var direction = vehicle.position - position
 	var vel = direction.normalized() * speed
 	move_and_slide(vel)
 
