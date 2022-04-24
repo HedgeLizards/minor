@@ -44,9 +44,10 @@ func add_placeholder(template):
 func _input(event):
 	if placing == null:
 		if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
-			var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + Vector2(coreX, coreY)
+			var core = Vector2(coreX, coreY)
+			var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + core
 			
-			if cell.x >= 0 and cell.y >= 0 and cell.x < gridW and cell.y < gridH and grid[cell.x][cell.y] != null:
+			if cell.x >= 0 and cell.y >= 0 and cell.x < gridW and cell.y < gridH and cell != core and grid[cell.x][cell.y] != null:
 				placing = grid[cell.x][cell.y]
 				
 				$Sprite.texture = placing.get_node('Sprite').frames.get_frame('default', 0)
@@ -61,7 +62,8 @@ func _input(event):
 	elif event is InputEventMouseMotion:
 		$Sprite.position = to_local(event.position - viewport.canvas_transform.origin)
 	elif event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
-		var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + Vector2(coreX, coreY)
+		var core = Vector2(coreX, coreY)
+		var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + core
 		
 		if cell.x >= 0 and cell.y >= 0 and cell.x < gridW and cell.y < gridH and grid[cell.x][cell.y] == null:
 			if placing.is_inside_tree():
@@ -93,12 +95,18 @@ func _input(event):
 				else:
 					placing.queue_free()
 			elif placing.is_inside_tree():
-				placing.position = (cell - Vector2(coreX, coreY)) * COMPONENT_SIZE
+				placing.position = (cell - core) * COMPONENT_SIZE
+				
+				resize_grid()
 			elif $'../Menu'.craft(placing.type):
 				add_component(placing, cell.x - coreX, cell.y - coreY)
+				
+				resize_grid()
 			else:
 				placing.queue_free()
 		elif placing.is_inside_tree():
+			grid[placing.x][placing.y] = placing
+			
 			placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
 		else:
 			placing.queue_free()
@@ -109,6 +117,119 @@ func _input(event):
 		placing = null
 		
 		update()
+
+func resize_grid():
+	var has_power = false
+	
+	for y in range(gridH):
+		if grid[0][y] != null and grid[0][y].power:
+			has_power = true
+	
+	if has_power:
+		var column = []
+		
+		for y in range(gridH):
+			column.push_back(null)
+		
+		grid.push_front(column)
+		
+		gridW += 1
+		coreX += 1
+	else:
+		has_power = false
+		
+		for y in range(gridH):
+			if grid[1][y] != null and grid[1][y].power:
+				has_power = true
+		
+		if not has_power:
+			grid.pop_front()
+			
+			gridW -= 1
+			coreX -= 1
+	
+	has_power = false
+	
+	for y in range(gridH):
+		if grid[gridW - 1][y] != null and grid[gridW - 1][y].power:
+			has_power = true
+	
+	if has_power:
+		var column = []
+		
+		for y in range(gridH):
+			column.push_back(null)
+		
+		grid.push_back(column)
+		
+		gridW += 1
+	else:
+		has_power = false
+		
+		for y in range(gridH):
+			if grid[gridW - 2][y] != null and grid[gridW - 2][y].power:
+				has_power = true
+		
+		if not has_power:
+			grid.pop_back()
+			
+			gridW -= 1
+	
+	has_power = false
+	
+	for x in range(gridW):
+		if grid[x][0] != null and grid[x][0].power:
+			has_power = true
+	
+	if has_power:
+		for row in grid:
+			row.push_front(null)
+		
+		gridH += 1
+		coreY += 1
+	else:
+		has_power = false
+		
+		for x in range(gridW):
+			if grid[x][1] != null and grid[x][1].power:
+				has_power = true
+		
+		if not has_power:
+			for row in grid:
+				row.pop_front()
+			
+			gridH -= 1
+			coreY -= 1
+	
+	has_power = false
+	
+	for x in range(gridW):
+		if grid[x][gridH - 1] != null and grid[x][gridH - 1].power:
+			has_power = true
+	
+	if has_power:
+		for row in grid:
+			row.push_back(null)
+		
+		gridH += 1
+	else:
+		has_power = false
+		
+		for x in range(gridW):
+			if grid[x][gridH - 2] != null and grid[x][gridH - 2].power:
+				has_power = true
+		
+		if not has_power:
+			for row in grid:
+				row.pop_back()
+			
+			gridH -= 1
+	
+	for x in range(gridW):
+		for y in range(gridH):
+			if grid[x][y] != null:
+				grid[x][y].x = x
+				grid[x][y].y = y
 
 func _draw():
 	for x in range(gridW):
