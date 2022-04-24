@@ -46,6 +46,8 @@ func add_placeholder(template):
 	$Sprite.texture = template.get_node('Icon').texture_normal
 	$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
 	$Sprite.visible = true
+	
+	update()
 
 func _input(event):
 	if placing == null:
@@ -238,13 +240,14 @@ func resize_grid():
 				grid[x][y].y = y
 
 func _draw():
-	for x in range(gridW):
-		for y in range(gridH):
-			if grid[x][y] == null:
-				draw_rect(Rect2(
-					Vector2((x - coreX - 0.5), (y - coreY - 0.5)) * COMPONENT_SIZE + Vector2(2, 2),
-					COMPONENT_SIZE - Vector2(4, 4)
-				), COLOR_EMPTY)
+	if placing != null:
+		for x in range(gridW):
+			for y in range(gridH):
+				if grid[x][y] == null:
+					draw_rect(Rect2(
+						Vector2((x - coreX - 0.5), (y - coreY - 0.5)) * COMPONENT_SIZE + Vector2(2, 2),
+						COMPONENT_SIZE - Vector2(4, 4)
+					), COLOR_EMPTY)
 
 func _physics_process(delta):
 	if placing != null and (Input.is_action_pressed('turnleft') or Input.is_action_pressed('turnright')):
