@@ -4,7 +4,7 @@ var inventory = {}
 
 func _ready():
 	# temporary
-	# Crafting.modulate.a = 1
+	$Crafting.modulate.a = 1
 	add({ iron = 100, aluminium = 100 })
 	
 	for component in ['Engine', 'Drill', 'Wheel']:
