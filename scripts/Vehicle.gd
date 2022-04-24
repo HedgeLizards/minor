@@ -3,6 +3,7 @@ extends RigidBody2D
 const COMPONENT_SIZE = Vector2(64, 64)
 const COLOR_EMPTY = Color(0, 0.5, 1, 0.5)
 
+var count = { Engine = 1, Drill = 1, Wheel = 2 }
 var gridW = 5
 var gridH = 3
 var coreX = 2
@@ -121,6 +122,8 @@ func _input(event):
 				
 				resize_grid()
 			elif $'../Menu'.craft(placing.type):
+				count[placing.type] += 1
+				
 				add_component(placing, cell.x - coreX, cell.y - coreY)
 				
 				resize_grid()
@@ -147,6 +150,8 @@ func _input(event):
 			KEY_BACKSPACE:
 				if placing.is_inside_tree():
 					$'../Menu'.deconstruct(placing.type)
+					
+					count[placing.type] -= 1
 					
 					grid[placing.x][placing.y] = null
 					
@@ -307,10 +312,10 @@ func _integrate_forces(state):
 	var velocity = Vector2()
 
 	if Input.is_action_pressed('forward'):
-		velocity.y -= 200
+		velocity.y -= count.Wheel * 70
 
 	if Input.is_action_pressed('backward'):
-		velocity.y += 200
+		velocity.y += count.Wheel * 70
 
 	state.angular_velocity = (float(Input.is_action_pressed('turnright')) - float(Input.is_action_pressed('turnleft'))) * 2
 
