@@ -3,13 +3,19 @@ extends RigidBody2D
 const COMPONENT_SIZE = Vector2(64, 64)
 const COLOR_EMPTY = Color(0, 0.5, 1, 0.5)
 
-var gridW = 3
+var gridW = 5
 var gridH = 3
-var coreX = 1
+var coreX = 2
 var coreY = 1
 var placing
 
-onready var grid = [[null, null, null], [null, $Core, null], [null, null, null]]
+onready var grid = [
+	[null, null, null],
+	[null, null, null],
+	[null, $Core, null],
+	[null, null, null],
+	[null, null, null]
+]
 
 onready var EngineScene = preload('res://scenes/Engine.tscn')
 onready var DrillScene = preload('res://scenes/Drill.tscn')
@@ -119,13 +125,13 @@ func _input(event):
 		update()
 
 func resize_grid():
-	var has_power = false
+	var has_solid = false
 	
 	for y in range(gridH):
-		if grid[0][y] != null and grid[0][y].power:
-			has_power = true
+		if grid[0][y] != null and grid[0][y].solid:
+			has_solid = true
 	
-	if has_power:
+	if has_solid:
 		var column = []
 		
 		for y in range(gridH):
@@ -136,25 +142,25 @@ func resize_grid():
 		gridW += 1
 		coreX += 1
 	else:
-		has_power = false
+		has_solid = false
 		
 		for y in range(gridH):
-			if grid[1][y] != null and grid[1][y].power:
-				has_power = true
+			if grid[1][y] != null and grid[1][y].solid:
+				has_solid = true
 		
-		if not has_power:
+		if not has_solid:
 			grid.pop_front()
 			
 			gridW -= 1
 			coreX -= 1
 	
-	has_power = false
+	has_solid = false
 	
 	for y in range(gridH):
-		if grid[gridW - 1][y] != null and grid[gridW - 1][y].power:
-			has_power = true
+		if grid[gridW - 1][y] != null and grid[gridW - 1][y].solid:
+			has_solid = true
 	
-	if has_power:
+	if has_solid:
 		var column = []
 		
 		for y in range(gridH):
@@ -164,62 +170,62 @@ func resize_grid():
 		
 		gridW += 1
 	else:
-		has_power = false
+		has_solid = false
 		
 		for y in range(gridH):
-			if grid[gridW - 2][y] != null and grid[gridW - 2][y].power:
-				has_power = true
+			if grid[gridW - 2][y] != null and grid[gridW - 2][y].solid:
+				has_solid = true
 		
-		if not has_power:
+		if not has_solid:
 			grid.pop_back()
 			
 			gridW -= 1
 	
-	has_power = false
+	has_solid = false
 	
 	for x in range(gridW):
-		if grid[x][0] != null and grid[x][0].power:
-			has_power = true
+		if grid[x][0] != null and grid[x][0].solid:
+			has_solid = true
 	
-	if has_power:
+	if has_solid:
 		for row in grid:
 			row.push_front(null)
 		
 		gridH += 1
 		coreY += 1
 	else:
-		has_power = false
+		has_solid = false
 		
 		for x in range(gridW):
-			if grid[x][1] != null and grid[x][1].power:
-				has_power = true
+			if grid[x][1] != null and grid[x][1].solid:
+				has_solid = true
 		
-		if not has_power:
+		if not has_solid:
 			for row in grid:
 				row.pop_front()
 			
 			gridH -= 1
 			coreY -= 1
 	
-	has_power = false
+	has_solid = false
 	
 	for x in range(gridW):
-		if grid[x][gridH - 1] != null and grid[x][gridH - 1].power:
-			has_power = true
+		if grid[x][gridH - 1] != null and grid[x][gridH - 1].solid:
+			has_solid = true
 	
-	if has_power:
+	if has_solid:
 		for row in grid:
 			row.push_back(null)
 		
 		gridH += 1
 	else:
-		has_power = false
+		has_solid = false
 		
 		for x in range(gridW):
-			if grid[x][gridH - 2] != null and grid[x][gridH - 2].power:
-				has_power = true
+			if grid[x][gridH - 2] != null and grid[x][gridH - 2].solid:
+				has_solid = true
 		
-		if not has_power:
+		if not has_solid:
 			for row in grid:
 				row.pop_back()
 			
