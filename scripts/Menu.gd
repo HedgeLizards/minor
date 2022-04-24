@@ -46,7 +46,9 @@ func add(items):
 			var label = Label.new()
 			var texture_rect = TextureRect.new()
 			
-			texture_rect.texture = preload('res://icon.png') # change to include item
+			texture_rect.texture = load('res://assets/TEX_%s_UI.png' % item)
+			texture_rect.expand = true
+			texture_rect.rect_min_size = Vector2(64, 64)
 			
 			h_box_container.name = item
 			h_box_container.alignment = BoxContainer.ALIGN_END
