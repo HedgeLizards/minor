@@ -95,12 +95,15 @@ func _process(delta):
 	var drills = get_tree().get_nodes_in_group("drillbits")
 	for drill in drills:
 		var local_position = $Tiles.to_local(drill.global_position)
-		var map_position = $Tiles.world_to_map(local_position)
-		var tile = grid.get(map_position)
+		var map_pos = $Tiles.world_to_map(local_position)
+		var tile = grid.get(map_pos)
 		if tile.typ.destructible:
 			var damage = drill.get_parent().damage * delta
 			tile.health -= damage
+			var broken_state = 3 - int(tile.health / tile.typ.maxhealth * 4)
+			$Breaking.set_cellv(map_pos, broken_state)
 			if tile.health <= 0.0:
-				update_tile(map_position, Tile.new(EMPTY, true))
+				update_tile(map_pos, Tile.new(EMPTY, true))
+				$Breaking.set_cellv(map_pos, -1)
 
 

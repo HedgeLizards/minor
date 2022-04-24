@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TEX_Background_Light.png-c6b6169b94d9ea272de76cbfbefc5679.stex"
+path="res://.import/Tileset_Broken.png-3668bee524616e2566b36d6428294310.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/TEX_Background_Light.png"
-dest_files=[ "res://.import/TEX_Background_Light.png-c6b6169b94d9ea272de76cbfbefc5679.stex" ]
+source_file="res://assets/Tileset_Broken.png"
+dest_files=[ "res://.import/Tileset_Broken.png-3668bee524616e2566b36d6428294310.stex" ]
 
 [params]
 

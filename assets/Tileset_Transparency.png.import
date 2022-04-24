@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Tileset_Transparency.png-2e6f0fb86c101d2a84adda9ce23d8cd0.stex"
+path="res://.import/Tileset_Transparency.png-d1e45e5726db6603f7ba594f0ee83782.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Tileset_Transparency.png"
-dest_files=[ "res://.import/Tileset_Transparency.png-2e6f0fb86c101d2a84adda9ce23d8cd0.stex" ]
+source_file="res://assets/Tileset_Transparency.png"
+dest_files=[ "res://.import/Tileset_Transparency.png-d1e45e5726db6603f7ba594f0ee83782.stex" ]
 
 [params]
 
