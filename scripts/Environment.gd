@@ -10,6 +10,7 @@ const IRON_TILE = 2
 const GOLD_TILE = 3
 
 
+
 class TileType:
 	var tileid
 	func _init(tileid):
@@ -95,6 +96,8 @@ func repeat(val, n):
 
 
 var grid = {}
+var astar = AStar2D.new()
+
 
 
 func _ready():
@@ -148,6 +151,7 @@ func generate():
 				dig_cave(blueprint, pos, 6)
 				dig_cave(blueprint, pos, 6)
 				dig_cave(blueprint, pos, 6)
+	blueprint[Vector2(-10, 0)] = MONSTER
 	for pos in blueprint:
 		update_tile(pos, Tile.new(blueprint[pos]), false)
 
@@ -189,6 +193,8 @@ func check_visibility(pos, offset):
 			return 0
 	return 1
 
+func calc_id(pos):
+	return int(pos.x) + 10000 + (int(pos.y) + 10000) * 20000
 
 func update_visibility_(pos, frontier, force=false):
 	var tile = grid.get(pos)
@@ -196,27 +202,40 @@ func update_visibility_(pos, frontier, force=false):
 		return
 	tile.visible = true
 	$Occlusion.set_cellv(pos, 0)
+
+	var astar_id = calc_id(pos)
+	astar.add_point(astar_id, pos)
+	for dir in [Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0), Vector2(0, -1)]:
+		update_visibility_(pos + dir, frontier)
+
+	for dir in [Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0), Vector2(0, -1), Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+		var n = calc_id(pos + dir)
+		if astar.has_point(n):
+			astar.connect_points(astar_id, n)
+
 	for scene in tile.typ.spawns():
 		spawn_monster(pos, scene)
-	update_visibility_(Vector2(pos.x + 1, pos.y), frontier)
-	update_visibility_(Vector2(pos.x - 1, pos.y), frontier)
-	update_visibility_(Vector2(pos.x, pos.y + 1), frontier)
-	update_visibility_(Vector2(pos.x, pos.y - 1), frontier)
 	for x in range(-1, 2):
 		for y in range(-1, 2):
 			frontier[Vector2(x, y) + pos] = null
 
 func spawn_monster(map_pos, scene):
-	var pos = $Tiles.to_global($Tiles.map_to_world(map_pos + Vector2(0.5, 0.5)))
 	var monster = scene.instance()
-	monster.global_position = pos
+	monster.global_position = tile_to_world(map_pos)
 	add_child(monster)
+
+func world_to_tile(world_pos):
+	return $Tiles.world_to_map($Tiles.to_local(world_pos))
+func tile_to_world(tile_pos):
+	return $Tiles.to_global($Tiles.map_to_world(tile_pos + Vector2(0.5, 0.5)))
+
+func is_blocking(tile_pos):
+	return grid.get(tile_pos, EMPTY).typ.is_occluding()
 
 func _process(delta):
 	var drills = get_tree().get_nodes_in_group("drillbits")
 	for drill in drills:
-		var local_position = $Tiles.to_local(drill.global_position)
-		var map_pos = $Tiles.world_to_map(local_position)
+		var map_pos = world_to_tile(drill.global_position)
 		var tile = grid.get(map_pos)
 		if tile != null and tile.typ.is_destructible():
 			var damage = drill.get_parent().damage * delta
