@@ -7,7 +7,7 @@ var gridW = 5
 var gridH = 3
 var coreX = 2
 var coreY = 1
-var placing
+var placing setget set_placing
 
 onready var grid = [
 	[null, null, null],
@@ -41,11 +41,20 @@ func add_component(component, x, y):
 	add_child(component)
 
 func add_placeholder(template):
-	placing = get('%sScene' % template.name).instance()
+	self.placing = get('%sScene' % template.name).instance()
 	
 	$Sprite.texture = template.get_node('Icon').texture_normal
 	$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
 	$Sprite.visible = true
+
+func set_placing(new_value):
+	placing = new_value
+	
+	if placing == null:
+		$'../Menu/Controls'.visible = false
+	else:
+		$'../Menu/Controls'.visible = true
+		$'../Menu/Controls/Rotate'.visible = !placing.solid
 	
 	update()
 
@@ -56,7 +65,7 @@ func _input(event):
 			var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + core
 			
 			if cell.x >= 0 and cell.y >= 0 and cell.x < gridW and cell.y < gridH and cell != core and grid[cell.x][cell.y] != null:
-				placing = grid[cell.x][cell.y]
+				self.placing = grid[cell.x][cell.y]
 				
 				$Sprite.texture = placing.get_node('Sprite').frames.get_frame('default', 0)
 				$Sprite.position = placing.position
@@ -65,8 +74,6 @@ func _input(event):
 				placing.visible = false
 				
 				grid[placing.x][placing.y] = null
-				
-				update()
 	elif event is InputEventMouseMotion:
 		$Sprite.position = to_local(event.position - viewport.canvas_transform.origin)
 	elif event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
@@ -122,9 +129,16 @@ func _input(event):
 		$Sprite.visible = false
 		
 		placing.visible = true
-		placing = null
 		
-		update()
+		self.placing = null
+	elif event is InputEventKey and event.pressed:
+		match event.scancode:
+			KEY_R:
+				pass
+			KEY_BACKSPACE:
+				pass
+			KEY_ESCAPE:
+				pass
 
 func resize_grid():
 	var has_solid = false
