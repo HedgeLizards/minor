@@ -3,9 +3,9 @@ extends CanvasLayer
 var inventory = {}
 
 func _ready():
-	yield(get_tree().create_timer(1), 'timeout')
 	# temporary
-	add({ iron = 5, aluminium = 8 })
+	# Crafting.modulate.a = 1
+	add({ iron = 100, aluminium = 100 })
 	
 	for component in ['Engine', 'Drill', 'Wheel']:
 		var icon = $Crafting.get_node(component).get_node('Icon')
@@ -13,7 +13,7 @@ func _ready():
 		icon.connect('button_down', self, '_on_Icon_button_down', [component])
 		icon.connect('mouse_entered', self, '_on_Icon_mouse_entered', [component])
 		icon.connect('mouse_exited', self, '_on_Icon_mouse_exited', [component])
-	
+
 func _on_Icon_button_down(component):
 	for child in $Crafting.get_node(component).get_node('HBoxContainer').get_children():
 		if child is Label and int(child.text) > inventory.get(child.name, 0):
@@ -65,7 +65,7 @@ func add(items):
 			
 			$Inventory.get_node(item).get_node('Label').text = str(inventory[item])
 	
-	tween(true, 1) # change to false
+	tween(false, 1)
 
 func remove(items):
 	for item in items:
@@ -81,8 +81,18 @@ func remove(items):
 	tween(false, 1)
 
 func tween(crafting_too, target):
-	if (crafting_too):
+	if crafting_too:
+		$Crafting.visible = true
 		$Tween.interpolate_property($Crafting, 'modulate:a', null, target, abs(target - $Crafting.modulate.a), Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+	elif target == 1:
+		$Timer.start()
 	
+	$Inventory.visible = true
 	$Tween.interpolate_property($Inventory, 'modulate:a', null, target, abs(target - $Inventory.modulate.a), Tween.TRANS_SINE, Tween.EASE_IN_OUT)
 	$Tween.start()
+
+func _on_Tween_tween_completed(object, key):
+	object.visible = object.modulate.a
+
+func _on_Timer_timeout():
+	tween(false, 0)
