@@ -3,7 +3,7 @@ extends CanvasLayer
 var inventory = {}
 
 func _ready():
-	add({ iron = 100, aluminium = 100 }) # temporary
+	add({ Iron = 100, Aluminium = 100 }) # temporary
 	
 	for component in ['Engine', 'Drill', 'Wheel']:
 		var icon = $Crafting.get_node(component).get_node('Icon')

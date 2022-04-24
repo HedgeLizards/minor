@@ -47,7 +47,7 @@ margin_left = 80.0
 margin_right = 236.0
 margin_bottom = 64.0
 
-[node name="iron" type="Label" parent="Menu/Crafting/Engine/HBoxContainer"]
+[node name="Iron" type="Label" parent="Menu/Crafting/Engine/HBoxContainer"]
 margin_top = 25.0
 margin_right = 8.0
 margin_bottom = 39.0
@@ -97,7 +97,7 @@ margin_left = 80.0
 margin_right = 156.0
 margin_bottom = 64.0
 
-[node name="aluminium" type="Label" parent="Menu/Crafting/Drill/HBoxContainer"]
+[node name="Aluminium" type="Label" parent="Menu/Crafting/Drill/HBoxContainer"]
 margin_top = 25.0
 margin_right = 8.0
 margin_bottom = 39.0
@@ -132,7 +132,7 @@ margin_left = 80.0
 margin_right = 156.0
 margin_bottom = 64.0
 
-[node name="iron" type="Label" parent="Menu/Crafting/Wheel/HBoxContainer"]
+[node name="Iron" type="Label" parent="Menu/Crafting/Wheel/HBoxContainer"]
 margin_top = 25.0
 margin_right = 8.0
 margin_bottom = 39.0
