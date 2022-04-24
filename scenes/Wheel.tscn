@@ -19,7 +19,7 @@
 [ext_resource path="res://assets/COMP_Wheels/COMP_Wheels_15.png" type="Texture" id=17]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 32, 32 )
+extents = Vector2( 24, 30 )
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
@@ -36,5 +36,5 @@ script = ExtResource( 2 )
 [node name="Sprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 2 )
-frame = 8
+frame = 12
 playing = true
