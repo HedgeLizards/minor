@@ -120,7 +120,7 @@ func sqr(x):
 var filling = {
 	"safe": repeat(EMPTY, 5) + repeat(GROUND, 4) + repeat(ALUMINIUM, 1),
 	"basic": repeat(EMPTY, 1) + repeat(GROUND, 7) + repeat(ALUMINIUM, 2) + repeat(MONSTER, 1),
-	"further": repeat(EMPTY, 1) + repeat(GROUND, 7) + repeat(ALUMINIUM, 2) + repeat(IRON, 2) + repeat(MONSTER, 1)
+	"further": repeat(EMPTY, 1) + repeat(GROUND, 7) + repeat(ALUMINIUM, 3) + repeat(IRON, 2) + repeat(GOLD, 1) + repeat(MONSTER, 1)
 }
 
 func gen_tile(pos):
