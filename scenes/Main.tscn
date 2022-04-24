@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/Vehicle.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Environment.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://assets/TEX_Background_Light.png" type="Texture" id=4]
 [ext_resource path="res://assets/COMP_Engine/COMP_Engine_8.png" type="Texture" id=5]
 [ext_resource path="res://assets/COMP_Drill/COMP_Drill_1.png" type="Texture" id=6]
+[ext_resource path="res://assets/TEX_Gold_UI.png" type="Texture" id=7]
 [ext_resource path="res://scripts/Menu.gd" type="Script" id=8]
 [ext_resource path="res://assets/MUS_MAIN.ogg" type="AudioStream" id=9]
 [ext_resource path="res://assets/TEX_Iron_UI.png" type="Texture" id=10]
@@ -28,58 +29,9 @@ margin_bottom = 112.0
 grow_vertical = 2
 custom_constants/separation = 32
 
-[node name="Engine" type="HBoxContainer" parent="Menu/Crafting"]
-margin_right = 64.0
-margin_bottom = 64.0
-custom_constants/separation = 16
-
-[node name="Icon" type="TextureButton" parent="Menu/Crafting/Engine"]
-margin_right = 64.0
-margin_bottom = 64.0
-rect_min_size = Vector2( 64, 64 )
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource( 5 )
-expand = true
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Menu/Crafting/Engine"]
-visible = false
-margin_left = 80.0
-margin_right = 236.0
-margin_bottom = 64.0
-
-[node name="Iron" type="Label" parent="Menu/Crafting/Engine/HBoxContainer"]
-margin_top = 25.0
-margin_right = 8.0
-margin_bottom = 39.0
-text = "3"
-
-[node name="IronIcon" type="TextureRect" parent="Menu/Crafting/Engine/HBoxContainer"]
-margin_left = 12.0
-margin_right = 76.0
-margin_bottom = 64.0
-rect_min_size = Vector2( 64, 64 )
-texture = ExtResource( 10 )
-expand = true
-
-[node name="Aluminium" type="Label" parent="Menu/Crafting/Engine/HBoxContainer"]
-margin_left = 80.0
-margin_top = 25.0
-margin_right = 88.0
-margin_bottom = 39.0
-text = "5"
-
-[node name="AluminiumIcon" type="TextureRect" parent="Menu/Crafting/Engine/HBoxContainer"]
-margin_left = 92.0
-margin_right = 156.0
-margin_bottom = 64.0
-rect_min_size = Vector2( 64, 64 )
-texture = ExtResource( 11 )
-expand = true
-
 [node name="Drill" type="HBoxContainer" parent="Menu/Crafting"]
-margin_top = 96.0
 margin_right = 64.0
-margin_bottom = 160.0
+margin_bottom = 64.0
 custom_constants/separation = 16
 
 [node name="Icon" type="TextureButton" parent="Menu/Crafting/Drill"]
@@ -101,7 +53,7 @@ margin_bottom = 64.0
 margin_top = 25.0
 margin_right = 8.0
 margin_bottom = 39.0
-text = "9"
+text = "5"
 
 [node name="AluminiumIcon" type="TextureRect" parent="Menu/Crafting/Drill/HBoxContainer"]
 margin_left = 12.0
@@ -109,6 +61,55 @@ margin_right = 76.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 64, 64 )
 texture = ExtResource( 11 )
+expand = true
+
+[node name="Engine" type="HBoxContainer" parent="Menu/Crafting"]
+margin_top = 96.0
+margin_right = 64.0
+margin_bottom = 160.0
+custom_constants/separation = 16
+
+[node name="Icon" type="TextureButton" parent="Menu/Crafting/Engine"]
+margin_right = 64.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource( 5 )
+expand = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Menu/Crafting/Engine"]
+visible = false
+margin_left = 80.0
+margin_right = 236.0
+margin_bottom = 64.0
+
+[node name="Aluminium" type="Label" parent="Menu/Crafting/Engine/HBoxContainer"]
+margin_top = 25.0
+margin_right = 8.0
+margin_bottom = 39.0
+text = "10"
+
+[node name="AluminiumIcon" type="TextureRect" parent="Menu/Crafting/Engine/HBoxContainer"]
+margin_left = 12.0
+margin_right = 76.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+texture = ExtResource( 11 )
+expand = true
+
+[node name="Gold" type="Label" parent="Menu/Crafting/Engine/HBoxContainer"]
+margin_left = 80.0
+margin_top = 25.0
+margin_right = 88.0
+margin_bottom = 39.0
+text = "1"
+
+[node name="GoldIcon" type="TextureRect" parent="Menu/Crafting/Engine/HBoxContainer"]
+margin_left = 92.0
+margin_right = 156.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+texture = ExtResource( 7 )
 expand = true
 
 [node name="Wheel" type="HBoxContainer" parent="Menu/Crafting"]
@@ -136,7 +137,7 @@ margin_bottom = 64.0
 margin_top = 25.0
 margin_right = 8.0
 margin_bottom = 39.0
-text = "4"
+text = "5"
 
 [node name="IronIcon" type="TextureRect" parent="Menu/Crafting/Wheel/HBoxContainer"]
 margin_left = 12.0

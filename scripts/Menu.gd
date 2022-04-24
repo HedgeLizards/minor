@@ -3,7 +3,8 @@ extends CanvasLayer
 var inventory = {}
 
 func _ready():
-	add({ Iron = 100, Aluminium = 100 }) # temporary
+	# add({ Iron = 100, Aluminium = 100 })
+	tween(true, 1) # temporary
 	
 	for component in ['Engine', 'Drill', 'Wheel']:
 		var icon = $Crafting.get_node(component).get_node('Icon')
@@ -20,6 +21,11 @@ func _on_Icon_button_down(component):
 	$'../Vehicle'.add_placeholder($Crafting.get_node(component))
 
 func _on_Icon_mouse_entered(component):
+	$Timer.start()
+	# temporary
+	$Inventory.modulate.a = 1
+	$Inventory.visible = true
+	
 	$Crafting.get_node(component).get_node('HBoxContainer').visible = true
 
 func _on_Icon_mouse_exited(component):
@@ -75,7 +81,7 @@ func add(items):
 			
 			$Inventory.get_node(item).get_node('Label').text = str(inventory[item])
 	
-	tween(true, 1) # change back to false
+	tween(false, 1)
 
 func remove(items):
 	for item in items:
@@ -88,7 +94,7 @@ func remove(items):
 		else:
 			$Inventory.get_node(item).get_node('Label').text = str(inventory[item])
 	
-	tween(false, 1)
+	# tween(false, 1)
 
 func tween(crafting_too, target):
 	if crafting_too:
