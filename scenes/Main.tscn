@@ -173,6 +173,7 @@ margin_right = 184.5
 margin_bottom = -32.0
 grow_horizontal = 2
 custom_constants/separation = 32
+alignment = 1
 
 [node name="Rotate" type="Label" parent="Menu/Controls"]
 margin_right = 75.0

@@ -8,6 +8,7 @@ var gridH = 3
 var coreX = 2
 var coreY = 1
 var placing setget set_placing
+var oldRotation
 
 onready var grid = [
 	[null, null, null],
@@ -55,6 +56,11 @@ func set_placing(new_value):
 	else:
 		$'../Menu/Controls'.visible = true
 		$'../Menu/Controls/Rotate'.visible = !placing.solid
+		$'../Menu/Controls/Deconstruct'.visible = placing.is_inside_tree()
+		
+		$Sprite.rotation = placing.rotation
+		
+		oldRotation = placing.rotation
 	
 	update()
 
@@ -107,6 +113,7 @@ func _input(event):
 					placing.x = xOld
 					placing.y = yOld
 					placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
+					placing.rotation = oldRotation
 				else:
 					placing.queue_free()
 			elif placing.is_inside_tree():
@@ -123,22 +130,44 @@ func _input(event):
 			grid[placing.x][placing.y] = placing
 			
 			placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
+			placing.rotation = oldRotation
 		else:
 			placing.queue_free()
 		
 		$Sprite.visible = false
-		
 		placing.visible = true
 		
 		self.placing = null
 	elif event is InputEventKey and event.pressed:
 		match event.scancode:
 			KEY_R:
-				pass
+				if not placing.solid:
+					$Sprite.rotation_degrees += 90
+					placing.rotation_degrees += 90
 			KEY_BACKSPACE:
-				pass
+				if placing.is_inside_tree():
+					$'../Menu'.deconstruct(placing.type)
+					
+					grid[placing.x][placing.y] = null
+					
+					placing.queue_free()
+					
+					$Sprite.visible = false
+					
+					self.placing = null
 			KEY_ESCAPE:
-				pass
+				if placing.is_inside_tree():
+					grid[placing.x][placing.y] = placing
+					
+					placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
+					placing.rotation = oldRotation
+					placing.visible = true
+				else:
+					placing.queue_free()
+				
+				$Sprite.visible = false
+				
+				self.placing = null
 
 func resize_grid():
 	var has_solid = false

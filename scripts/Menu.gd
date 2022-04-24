@@ -39,6 +39,15 @@ func craft(component):
 	
 	return true
 
+func deconstruct(component):
+	var items = {}
+	
+	for child in $Crafting.get_node(component).get_node('HBoxContainer').get_children():
+		if child is Label:
+			items[child.name] = int(child.text)
+	
+	add(items)
+
 func add(items):
 	for item in items:
 		if not inventory.has(item):
