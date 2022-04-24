@@ -7,7 +7,7 @@ var gridW = 3
 var gridH = 3
 var coreX = 1
 var coreY = 1
-var placing = null
+var placing
 
 onready var grid = [[null, null, null], [null, $Core, null], [null, null, null]]
 onready var shapes = [$Core]
@@ -38,21 +38,12 @@ func add_component(component, x, y):
 	
 	add_child(component)
 
-func add_placeholder(scene, template):
-	placing = scene.instance()
+func add_placeholder(template):
+	placing = get('%sScene' % template.name).instance()
 	
-	$Sprite.texture = template.texture_normal
+	$Sprite.texture = template.get_node('Icon').texture_normal
 	$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
 	$Sprite.visible = true
-
-func _on_Engine_button_down():
-	add_placeholder(EngineScene, $'../CanvasLayer/Components/Engine')
-
-func _on_Drill_button_down():
-	add_placeholder(DrillScene, $'../CanvasLayer/Components/Drill')
-
-func _on_Wheel_button_down():
-	add_placeholder(WheelScene, $'../CanvasLayer/Components/Wheel')
 
 func _on_Vehicle_input_event(viewport, event, shape_idx, component = null):
 	if placing == null and event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
@@ -113,8 +104,10 @@ func _input(event):
 					placing.queue_free()
 			elif placing.is_inside_tree():
 				placing.position = (cell - Vector2(coreX, coreY)) * COMPONENT_SIZE
-			else:
+			elif $'../Menu'.craft(placing.type):
 				add_component(placing, cell.x - coreX, cell.y - coreY)
+			else:
+				placing.queue_free()
 		elif placing.is_inside_tree():
 			placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
 		else:
