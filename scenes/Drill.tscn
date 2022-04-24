@@ -26,6 +26,7 @@ script = ExtResource( 2 )
 [node name="Sprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 3 )
+frame = 3
 playing = true
 
 [node name="drillbit1" type="Node2D" parent="." groups=["drillbits"]]
