@@ -4,6 +4,7 @@ var x
 var y
 var solid = true
 var power = true
+var type = 'Engine'
 
 func is_valid(grid, gridW, gridH):
 	return name == 'Core' or [

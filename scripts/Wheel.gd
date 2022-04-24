@@ -4,6 +4,7 @@ var x
 var y
 var solid = false
 var power = false
+var type = 'Wheel'
 
 func is_valid(grid, gridW, gridH):
 	return [
