@@ -10,7 +10,6 @@ var coreY = 1
 var placing
 
 onready var grid = [[null, null, null], [null, $Core, null], [null, null, null]]
-onready var shapes = [$Core]
 
 onready var EngineScene = preload('res://scenes/Engine.tscn')
 onready var DrillScene = preload('res://scenes/Drill.tscn')
@@ -33,9 +32,6 @@ func add_component(component, x, y):
 	
 	grid[component.x][component.y] = component
 	
-	if component is CollisionShape2D:
-		shapes.push_back(component)
-	
 	add_child(component)
 
 func add_placeholder(template):
@@ -45,30 +41,24 @@ func add_placeholder(template):
 	$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
 	$Sprite.visible = true
 
-func _on_Vehicle_input_event(viewport, event, shape_idx, component = null):
-	if placing == null and event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
-		if component != null:
-			placing = component
-		elif shapes[shape_idx] != $Core:
-			placing = shapes[shape_idx]
-		else:
-			return
-		
-		$Sprite.texture = placing.get_node('Sprite').frames.get_frame('default', 0)
-		$Sprite.position = placing.position
-		$Sprite.visible = true
-		
-		placing.visible = false
-		
-		grid[placing.x][placing.y] = null
-		
-		update()
-
 func _input(event):
 	if placing == null:
-		return
-	
-	if event is InputEventMouseMotion:
+		if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
+			var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + Vector2(coreX, coreY)
+			
+			if cell.x >= 0 and cell.y >= 0 and cell.x < gridW and cell.y < gridH and grid[cell.x][cell.y] != null:
+				placing = grid[cell.x][cell.y]
+				
+				$Sprite.texture = placing.get_node('Sprite').frames.get_frame('default', 0)
+				$Sprite.position = placing.position
+				$Sprite.visible = true
+				
+				placing.visible = false
+				
+				grid[placing.x][placing.y] = null
+				
+				update()
+	elif event is InputEventMouseMotion:
 		$Sprite.position = to_local(event.position - viewport.canvas_transform.origin)
 	elif event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
 		var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + Vector2(coreX, coreY)
@@ -145,4 +135,3 @@ func _integrate_forces(state):
 	state.angular_velocity = (float(Input.is_action_pressed('turnright')) - float(Input.is_action_pressed('turnleft'))) * 2
 	
 	state.linear_velocity = velocity.rotated(rotation)
-

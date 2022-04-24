@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/Drill.gd" type="Script" id=2]
 [ext_resource path="res://assets/COMP_Drill/COMP_Drill_5.png" type="Texture" id=3]
@@ -15,34 +15,23 @@ animations = [ {
 "speed": 10.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 32, 32 )
-
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 10, 24 )
 
 [node name="Drill" type="Area2D"]
-monitoring = false
-monitorable = false
+collision_layer = 0
+collision_mask = 4
 script = ExtResource( 2 )
 
 [node name="Sprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 3 )
-frame = 2
 playing = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
 
 [node name="drillbit1" type="Node2D" parent="." groups=["drillbits"]]
 
 [node name="drillbit2" type="Node2D" parent="." groups=["drillbits"]]
 position = Vector2( 0, -24 )
 
-[node name="Weapon" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Weapon"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
