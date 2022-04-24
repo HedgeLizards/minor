@@ -9,12 +9,19 @@ var power = false
 var type = 'Drill'
 
 func is_valid(grid, gridW, gridH):
-	return [
-		(x > 0 and grid[x - 1][y] != null and grid[x - 1][y].solid),
-		(y > 0 and grid[x][y - 1] != null and grid[x][y - 1].solid),
-		(x < gridW - 1 and grid[x + 1][y] != null and grid[x + 1][y].solid),
-		(y < gridH - 1 and grid[x][y + 1] != null and grid[x][y + 1].solid)
-	].has(true) and [
+	var attached
+	
+	match int(rotation_degrees / 90) % 4:
+		1:
+			attached = (x > 0 and grid[x - 1][y] != null and grid[x - 1][y].solid)
+		2:
+			attached = (y > 0 and grid[x][y - 1] != null and grid[x][y - 1].solid)
+		3:
+			attached = (x < gridW - 1 and grid[x + 1][y] != null and grid[x + 1][y].solid)
+		0:
+			attached = (y < gridH - 1 and grid[x][y + 1] != null and grid[x][y + 1].solid)
+	
+	return attached and [
 		(x > 0 and grid[x - 1][y] != null and grid[x - 1][y].power),
 		(y > 0 and grid[x][y - 1] != null and grid[x][y - 1].power),
 		(x < gridW - 1 and grid[x + 1][y] != null and grid[x + 1][y].power),

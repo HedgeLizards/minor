@@ -3,11 +3,13 @@ extends RigidBody2D
 const COMPONENT_SIZE = Vector2(64, 64)
 const COLOR_EMPTY = Color(0, 0.5, 1, 0.5)
 
+var count = { Engine = 1, Drill = 1, Wheel = 2 }
 var gridW = 5
 var gridH = 3
 var coreX = 2
 var coreY = 1
-var placing
+var placing setget set_placing
+var oldRotation
 
 onready var grid = [
 	[null, null, null],
@@ -41,11 +43,25 @@ func add_component(component, x, y):
 	add_child(component)
 
 func add_placeholder(template):
-	placing = get('%sScene' % template.name).instance()
+	self.placing = get('%sScene' % template.name).instance()
 	
 	$Sprite.texture = template.get_node('Icon').texture_normal
 	$Sprite.position = to_local(viewport.get_mouse_position() - viewport.canvas_transform.origin)
 	$Sprite.visible = true
+
+func set_placing(new_value):
+	placing = new_value
+	
+	if placing == null:
+		$'../Menu/Controls'.visible = false
+	else:
+		$'../Menu/Controls'.visible = true
+		$'../Menu/Controls/Rotate'.visible = !placing.solid
+		$'../Menu/Controls/Deconstruct'.visible = placing.is_inside_tree()
+		
+		$Sprite.rotation = placing.rotation
+		
+		oldRotation = placing.rotation
 	
 	update()
 
@@ -56,7 +72,7 @@ func _input(event):
 			var cell = (to_local(event.position - viewport.canvas_transform.origin) / COMPONENT_SIZE).round() + core
 			
 			if cell.x >= 0 and cell.y >= 0 and cell.x < gridW and cell.y < gridH and cell != core and grid[cell.x][cell.y] != null:
-				placing = grid[cell.x][cell.y]
+				self.placing = grid[cell.x][cell.y]
 				
 				$Sprite.texture = placing.get_node('Sprite').frames.get_frame('default', 0)
 				$Sprite.position = placing.position
@@ -65,8 +81,6 @@ func _input(event):
 				placing.visible = false
 				
 				grid[placing.x][placing.y] = null
-				
-				update()
 	elif event is InputEventMouseMotion:
 		$Sprite.position = to_local(event.position - viewport.canvas_transform.origin)
 	elif event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
@@ -100,6 +114,7 @@ func _input(event):
 					placing.x = xOld
 					placing.y = yOld
 					placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
+					placing.rotation = oldRotation
 				else:
 					placing.queue_free()
 			elif placing.is_inside_tree():
@@ -107,6 +122,8 @@ func _input(event):
 				
 				resize_grid()
 			elif $'../Menu'.craft(placing.type):
+				count[placing.type] += 1
+				
 				add_component(placing, cell.x - coreX, cell.y - coreY)
 				
 				resize_grid()
@@ -116,15 +133,46 @@ func _input(event):
 			grid[placing.x][placing.y] = placing
 			
 			placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
+			placing.rotation = oldRotation
 		else:
 			placing.queue_free()
 		
 		$Sprite.visible = false
-		
 		placing.visible = true
-		placing = null
 		
-		update()
+		self.placing = null
+	elif event is InputEventKey and event.pressed:
+		match event.scancode:
+			KEY_R:
+				if not placing.solid:
+					$Sprite.rotation_degrees += 90
+					placing.rotation_degrees += 90
+			KEY_BACKSPACE:
+				if placing.is_inside_tree():
+					$'../Menu'.deconstruct(placing.type)
+					
+					count[placing.type] -= 1
+					
+					grid[placing.x][placing.y] = null
+					
+					placing.queue_free()
+					
+					$Sprite.visible = false
+					
+					self.placing = null
+			KEY_ESCAPE:
+				if placing.is_inside_tree():
+					grid[placing.x][placing.y] = placing
+					
+					placing.position = Vector2(placing.x - coreX, placing.y - coreY) * COMPONENT_SIZE
+					placing.rotation = oldRotation
+					placing.visible = true
+				else:
+					placing.queue_free()
+				
+				$Sprite.visible = false
+				
+				self.placing = null
 
 func resize_grid():
 	var has_solid = false
@@ -264,10 +312,10 @@ func _integrate_forces(state):
 	var velocity = Vector2()
 
 	if Input.is_action_pressed('forward'):
-		velocity.y -= 200
+		velocity.y -= count.Wheel * 70
 
 	if Input.is_action_pressed('backward'):
-		velocity.y += 200
+		velocity.y += count.Wheel * 70
 
 	state.angular_velocity = (float(Input.is_action_pressed('turnright')) - float(Input.is_action_pressed('turnleft'))) * 2
 
