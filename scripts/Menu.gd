@@ -97,6 +97,8 @@ func remove(items):
 	# tween(false, 1)
 
 func tween(crafting_too, target):
+	$Tween.remove_all()
+	
 	if crafting_too:
 		$Crafting.visible = true
 		$Tween.interpolate_property($Crafting, 'modulate:a', null, target, abs(target - $Crafting.modulate.a), Tween.TRANS_SINE, Tween.EASE_IN_OUT)
