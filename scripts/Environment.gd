@@ -120,7 +120,8 @@ func sqr(x):
 var filling = {
 	"safe": repeat(EMPTY, 5) + repeat(GROUND, 4) + repeat(ALUMINIUM, 1),
 	"basic": repeat(EMPTY, 1) + repeat(GROUND, 7) + repeat(ALUMINIUM, 2) + repeat(MONSTER, 1),
-	"further": repeat(EMPTY, 1) + repeat(GROUND, 7) + repeat(ALUMINIUM, 3) + repeat(IRON, 2) + repeat(GOLD, 1) + repeat(MONSTER, 1)
+	"ironlayer": repeat(EMPTY, 1) + repeat(GROUND, 7) + repeat(ALUMINIUM, 3) + repeat(IRON, 2) + repeat(MONSTER, 1),
+	"goldlayer": repeat(EMPTY, 1) + repeat(GROUND, 5) + repeat(ALUMINIUM, 3) + repeat(IRON, 2) + repeat(GOLD, 1) + repeat(MONSTER, 2)
 }
 
 func gen_tile(pos):
@@ -132,10 +133,12 @@ func gen_tile(pos):
 	var filler
 	if dist < 12:
 		filler = filling.safe
-	elif dist < 48:
+	elif dist < 40:
 		filler = filling.basic
+	elif dist < 60:
+		filler = filling.ironlayer
 	else:
-		filler = filling.further
+		filler = filling.goldlayer
 	return filler[randi() % len(filler)]
 
 func generate():
@@ -210,7 +213,7 @@ func update_visibility_(pos, frontier, force=false):
 
 	for dir in [Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0), Vector2(0, -1), Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
 		var n = calc_id(pos + dir)
-		if astar.has_point(n):
+		if astar.has_point(n) and astar.has_point(calc_id(pos + Vector2(dir.x, 0))) and astar.has_point(calc_id(pos + Vector2(0, dir.y))):
 			astar.connect_points(astar_id, n)
 
 	for scene in tile.typ.spawns():
@@ -227,7 +230,7 @@ func spawn_monster(map_pos, scene):
 func world_to_tile(world_pos):
 	return $Tiles.world_to_map($Tiles.to_local(world_pos))
 func tile_to_world(tile_pos):
-	return $Tiles.to_global($Tiles.map_to_world(tile_pos + Vector2(0.5, 0.5)))
+	return $Tiles.to_global($Tiles.map_to_world(tile_pos) + $Tiles.cell_size / 2)
 
 func is_blocking(tile_pos):
 	return grid.get(tile_pos, EMPTY).typ.is_occluding()
