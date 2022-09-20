@@ -1,2 +1,2 @@
 
-[https://hedgelizards.github.io/](https://hedgelizards.github.io/)
+[https://hedgelizards.github.io/minor](https://hedgelizards.github.io/minor)
